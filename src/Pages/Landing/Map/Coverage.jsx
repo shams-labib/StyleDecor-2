@@ -49,7 +49,9 @@ const Coverage = ({ coveragePromise }) => {
             animate={{ y: [0, -10, 0] }}
             transition={{ repeat: Infinity, duration: 2, ease: "easeInOut" }}
           >
-            <FaMapMarkerAlt className="text-red-500" />
+            <span className="lg:block hidden">
+              <FaMapMarkerAlt className="text-red-500" />
+            </span>
           </motion.div>
           <span>Available in 64 Districts</span>
         </h2>

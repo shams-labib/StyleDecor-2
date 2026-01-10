@@ -145,7 +145,7 @@ const Login = () => {
               <SocialLogin />
 
               <p className="text-center mt-8 text-gray-600 dark:text-gray-400 text-sm">
-                New to ZapShift?{" "}
+                New to StyleDecor?{" "}
                 <Link
                   state={location?.state}
                   to="/register"

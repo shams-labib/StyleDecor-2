@@ -106,7 +106,7 @@ const ServicesPage = () => {
       </form>
 
       {/* Services Grid */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8">
+      <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8">
         {services.length > 0 ? (
           services.map((service) => (
             <ServiceCard key={service._id} service={service} />

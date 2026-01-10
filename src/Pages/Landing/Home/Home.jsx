@@ -9,6 +9,7 @@ import TopCard from "../../Services Page/TopCard";
 import TopDecorator from "../../Top Decorators/TopDecorator";
 import Coverage from "../Map/Coverage";
 import TopSellerBurgers from "../../Top Decorators/TopBurder";
+import FloatingContact from "../../FloatingContact/FloatingContact";
 
 const reviewPromise = fetch("/reviews.json").then((res) => res.json());
 const coveragePromise = fetch("/serviceCenter.json").then((res) => res.json());
@@ -52,6 +53,8 @@ const Home = () => {
       <section className="">
         <Contact />
       </section>
+
+      <FloatingContact></FloatingContact>
     </div>
   );
 };

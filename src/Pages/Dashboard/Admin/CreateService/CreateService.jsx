@@ -3,6 +3,16 @@ import { useForm } from "react-hook-form";
 import useAuth from "../../../../Hooks/useAuth";
 import useAxiosSecure from "../../../../Hooks/useAxiosSecure";
 import Swal from "sweetalert2";
+import {
+  PlusCircle,
+  DollarSign,
+  Star,
+  Layers,
+  Image as ImageIcon,
+  AlignLeft,
+  Mail,
+} from "lucide-react";
+import { motion } from "framer-motion";
 
 export default function CreateService() {
   const { user } = useAuth();
@@ -24,176 +34,185 @@ export default function CreateService() {
     };
 
     Swal.fire({
-      title: "Are you sure to add this service?",
-      text: "You won't be able to revert this!",
-      icon: "warning",
+      title: "Confirm New Service?",
+      text: "This will be visible to all customers.",
+      icon: "question",
       showCancelButton: true,
-      confirmButtonColor: "#3085d6",
-      cancelButtonColor: "#d33",
-      confirmButtonText: "Yes, add it!",
+      confirmButtonColor: "var(--p)",
+      cancelButtonColor: "#ef4444",
+      confirmButtonText: "Yes, Create it!",
+      background: "var(--b1)",
     }).then(async (result) => {
       if (result.isConfirmed) {
         try {
           await axiosSecure.post("/services", finalData);
-          Swal.fire(
-            "Service added!",
-            "Service has been added to the collection.",
-            "success"
-          );
+          Swal.fire({
+            icon: "success",
+            title: "Service Published!",
+            timer: 2000,
+            showConfirmButton: false,
+          });
+          reset();
         } catch (err) {
-          console.error(err);
-          Swal.fire("Error!", "Adding service failed!", "error");
+          Swal.fire("Error!", "Failed to save service.", "error");
         }
       }
     });
-
-    reset();
   };
 
   return (
-    <div className="max-w-3xl mx-auto p-8 bg-white dark:bg-gray-900 shadow-xl rounded-2xl border mt-10">
-      <h2 className="text-3xl font-bold text-center mb-6">
-        Create Decoration Service
-      </h2>
-
-      <form
-        onSubmit={handleSubmit(onSubmit)}
-        className="grid grid-cols-1 md:grid-cols-2 gap-5"
+    <div className="p-6 bg-gray-50 dark:bg-gray-950 min-h-screen">
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        className="max-w-4xl mx-auto"
       >
-        {/* Service Name */}
-        <div className="form-control">
-          <label className="label">
-            <span className="font-semibold">Service Name</span>
-          </label>
-          <input
-            {...register("serviceName", { required: true })}
-            className="input input-bordered w-full outline-none"
-            placeholder="Enter service name"
-          />
-          {errors.serviceName && (
-            <p className="text-red-500 text-sm">Required</p>
-          )}
+        {/* Header */}
+        <div className="mb-10 text-center">
+          <h2 className="text-4xl font-black text-gray-900 dark:text-white tracking-tight flex items-center justify-center gap-3">
+            <PlusCircle className="text-primary" size={36} /> Add New Service
+          </h2>
+          <p className="text-gray-500 font-medium mt-2">
+            Expand your portfolio with a new decoration package
+          </p>
         </div>
 
-        {/* Cost */}
-        <div className="form-control">
-          <label className="label">
-            <span className="font-semibold">Cost (BDT)</span>
-          </label>
-          <input
-            type="number"
-            {...register("cost", { required: true })}
-            className="input input-bordered w-full outline-none"
-            placeholder="50000"
-          />
-          {errors.cost && <p className="text-red-500 text-sm">Required</p>}
-        </div>
-
-        {/* Rating */}
-        <div className="form-control">
-          <label className="label">
-            <span className="font-semibold">Rating</span>
-          </label>
-          <input
-            type="number"
-            step="0.1"
-            min="0"
-            max="5"
-            {...register("rating", { required: true, min: 0, max: 5 })}
-            className="input input-bordered w-full outline-none"
-            placeholder="Enter rating (0-5)"
-          />
-          {errors.rating && (
-            <p className="text-red-500 text-sm">Rating is required (0-5)</p>
-          )}
-        </div>
-
-        {/* Unit */}
-        <div className="form-control">
-          <label className="label">
-            <span className="font-semibold">Unit</span>
-          </label>
-          <select
-            {...register("unit", { required: true })}
-            className="select select-bordered w-full outline-none"
+        {/* Form Card */}
+        <div className="bg-white dark:bg-gray-900 shadow-2xl shadow-gray-200/50 dark:shadow-none rounded-[2.5rem] p-8 md:p-12 border border-gray-100 dark:border-gray-800">
+          <form
+            onSubmit={handleSubmit(onSubmit)}
+            className="grid grid-cols-1 md:grid-cols-2 gap-8"
           >
-            <option value="">Select Unit</option>
-            <option value="per_sqft">Per sq-ft</option>
-            <option value="per_floor">Per floor</option>
-            <option value="per_meter">Per meter</option>
-            <option value="per_event">Per event</option>
-          </select>
-          {errors.unit && <p className="text-red-500 text-sm">Required</p>}
-        </div>
+            {/* Service Name */}
+            <div className="space-y-2">
+              <label className="text-[11px] font-black text-gray-400 uppercase tracking-widest ml-1">
+                Service Title
+              </label>
+              <div className="relative">
+                <input
+                  {...register("serviceName", { required: true })}
+                  className="w-full bg-gray-50 dark:bg-gray-800 border-none rounded-2xl px-5 py-4 focus:ring-2 focus:ring-primary outline-none font-bold"
+                  placeholder="e.g. Royal Wedding Package"
+                />
+                {errors.serviceName && (
+                  <span className="text-[10px] text-red-500 absolute -bottom-5 left-2">
+                    Title is required
+                  </span>
+                )}
+              </div>
+            </div>
 
-        {/* Category */}
-        <div className="form-control">
-          <label className="label">
-            <span className="font-semibold">Service Category</span>
-          </label>
-          <select
-            {...register("category", { required: true })}
-            className="select select-bordered w-full outline-none"
-          >
-            <option value="">Select Category</option>
-            <option value="home">Home</option>
-            <option value="wedding">Wedding</option>
-            <option value="office">Office</option>
-            <option value="seminar">Seminar</option>
-            <option value="meeting">Birthday</option>
-          </select>
-          {errors.category && <p className="text-red-500 text-sm">Required</p>}
-        </div>
+            {/* Cost */}
+            <div className="space-y-2">
+              <label className="text-[11px] font-black text-gray-400 uppercase tracking-widest ml-1 flex items-center gap-1">
+                <DollarSign size={12} /> Cost (BDT)
+              </label>
+              <input
+                type="number"
+                {...register("cost", { required: true })}
+                className="w-full bg-gray-50 dark:bg-gray-800 border-none rounded-2xl px-5 py-4 focus:ring-2 focus:ring-primary outline-none font-bold"
+                placeholder="50000"
+              />
+            </div>
 
-        {/* Services Image */}
-        <div className="form-control md:col-span-2">
-          <label className="label">
-            <span className="font-semibold">Services Image</span>
-          </label>
-          <input
-            type="text"
-            {...register("image", { required: true })}
-            className="input input-bordered w-full outline-none"
-            placeholder="Services photo"
-          />
-          {errors.image && <p className="text-red-500 text-sm">Required</p>}
-        </div>
+            {/* Rating & Unit (Grid inside Grid) */}
+            <div className="grid grid-cols-2 gap-4 md:col-span-1">
+              <div className="space-y-2">
+                <label className="text-[11px] font-black text-gray-400 uppercase tracking-widest ml-1 flex items-center gap-1">
+                  <Star size={12} /> Rating
+                </label>
+                <input
+                  type="number"
+                  step="0.1"
+                  min="0"
+                  max="5"
+                  {...register("rating", { required: true })}
+                  className="w-full bg-gray-50 dark:bg-gray-800 border-none rounded-2xl px-5 py-4 focus:ring-2 focus:ring-primary outline-none font-bold text-center"
+                  placeholder="4.5"
+                />
+              </div>
+              <div className="space-y-2">
+                <label className="text-[11px] font-black text-gray-400 uppercase tracking-widest ml-1">
+                  Unit Type
+                </label>
+                <select
+                  {...register("unit", { required: true })}
+                  className="w-full bg-gray-50 dark:bg-gray-800 border-none rounded-2xl px-4 py-4 focus:ring-2 focus:ring-primary outline-none font-bold"
+                >
+                  <option value="per_sqft">Sq-ft</option>
+                  <option value="per_floor">Floor</option>
+                  <option value="per_event">Event</option>
+                </select>
+              </div>
+            </div>
 
-        {/* Description */}
-        <div className="form-control md:col-span-2">
-          <label className="label">
-            <span className="font-semibold">Description</span>
-          </label>
-          <textarea
-            {...register("description", { required: true })}
-            className="textarea textarea-bordered w-full h-28 outline-none"
-            placeholder="Write service details here..."
-          ></textarea>
-          {errors.description && (
-            <p className="text-red-500 text-sm">Required</p>
-          )}
-        </div>
+            {/* Category */}
+            <div className="space-y-2">
+              <label className="text-[11px] font-black text-gray-400 uppercase tracking-widest ml-1 flex items-center gap-1">
+                <Layers size={12} /> Service Category
+              </label>
+              <select
+                {...register("category", { required: true })}
+                className="w-full bg-gray-50 dark:bg-gray-800 border-none rounded-2xl px-5 py-4 focus:ring-2 focus:ring-primary outline-none font-bold capitalize"
+              >
+                <option value="">Select Category</option>
+                <option value="home">Home</option>
+                <option value="wedding">Wedding</option>
+                <option value="office">Office</option>
+                <option value="seminar">Seminar</option>
+                <option value="meeting">Birthday</option>
+              </select>
+            </div>
 
-        {/* Auto-filled Email */}
-        <div className="form-control md:col-span-2">
-          <label className="label">
-            <span className="font-semibold">Created By (Email)</span>
-          </label>
-          <input
-            value={user?.email || ""}
-            disabled
-            className="input input-bordered w-full bg-gray-100 dark:bg-gray-900"
-          />
-        </div>
+            {/* Image URL */}
+            <div className="md:col-span-2 space-y-2">
+              <label className="text-[11px] font-black text-gray-400 uppercase tracking-widest ml-1 flex items-center gap-1">
+                <ImageIcon size={12} /> Image URL
+              </label>
+              <input
+                type="text"
+                {...register("image", { required: true })}
+                className="w-full bg-gray-50 dark:bg-gray-800 border-none rounded-2xl px-5 py-4 focus:ring-2 focus:ring-primary outline-none font-bold"
+                placeholder="https://example.com/photo.jpg"
+              />
+            </div>
 
-        {/* Submit Button */}
-        <button
-          type="submit"
-          className="btn btn-primary md:col-span-2 w-full mt-3"
-        >
-          Create Service
-        </button>
-      </form>
+            {/* Description */}
+            <div className="md:col-span-2 space-y-2">
+              <label className="text-[11px] font-black text-gray-400 uppercase tracking-widest ml-1 flex items-center gap-1">
+                <AlignLeft size={12} /> Detailed Description
+              </label>
+              <textarea
+                {...register("description", { required: true })}
+                className="w-full bg-gray-50 dark:bg-gray-800 border-none rounded-[1.5rem] px-5 py-4 focus:ring-2 focus:ring-primary outline-none font-bold min-h-[120px]"
+                placeholder="Describe the aesthetic, materials used, and what's included..."
+              ></textarea>
+            </div>
+
+            {/* Email (Read Only) */}
+            <div className="md:col-span-2 space-y-2 opacity-60 cursor-not-allowed">
+              <label className="text-[11px] font-black text-gray-400 uppercase tracking-widest ml-1 flex items-center gap-1">
+                <Mail size={12} /> Creator Email
+              </label>
+              <input
+                value={user?.email || ""}
+                disabled
+                className="w-full bg-gray-100 dark:bg-gray-950 border-none rounded-2xl px-5 py-4 font-bold text-gray-500"
+              />
+            </div>
+
+            {/* Submit Button */}
+            <div className="md:col-span-2 pt-4">
+              <button
+                type="submit"
+                className="w-full bg-primary hover:bg-primary/90 text-white font-black uppercase tracking-[0.2em] py-5 rounded-2xl shadow-xl shadow-primary/20 transition-all active:scale-95"
+              >
+                Create Service
+              </button>
+            </div>
+          </form>
+        </div>
+      </motion.div>
     </div>
   );
 }

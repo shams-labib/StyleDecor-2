@@ -113,19 +113,25 @@ const TopCard = () => {
         </motion.div>
 
         {/* --- Services Grid --- */}
+        {/* --- Services Grid --- */}
         <motion.div
           variants={containerVariants}
           initial="hidden"
           whileInView="show"
           viewport={{ once: true, margin: "-100px" }}
-          className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8"
+          /* grid-cols-2: Mobile-e 2 ti card (default)
+     md:grid-cols-3: Tablet-e 3 ti card
+     lg:grid-cols-4: Desktop-e 4 ti card
+     gap-4 md:gap-8: Mobile-e gap kom thakbe, desktop-e barbe
+  */
+          className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 md:gap-8"
         >
           {topServices.length > 0 ? (
             topServices.map((service) => (
               <motion.div
                 key={service._id}
                 variants={itemVariants}
-                whileHover={{ y: -10, transition: { duration: 0.3 } }} // Hover e upore uthbe
+                whileHover={{ y: -10, transition: { duration: 0.3 } }}
               >
                 <ServiceCard service={service} />
               </motion.div>

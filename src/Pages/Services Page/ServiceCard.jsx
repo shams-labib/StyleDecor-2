@@ -6,82 +6,91 @@ import { ArrowRight, Tag, Star } from "lucide-react";
 const ServiceCard = ({ service }) => {
   const renderStars = (rating) => {
     const stars = [];
-    const fullStars = Math.floor(rating || 0); // full stars
-    const halfStar = rating - fullStars >= 0.5; // half star
+    const fullStars = Math.floor(rating || 0);
+    const halfStar = rating - fullStars >= 0.5;
     const emptyStars = 5 - fullStars - (halfStar ? 1 : 0);
 
-    for (let i = 0; i < fullStars; i++) {
-      stars.push(<Star key={`full-${i}`} className="text-yellow-400" />);
+    for (let i = 0; i < 5; i++) {
+      if (i < fullStars) {
+        stars.push(
+          <Star key={i} size={14} className="text-yellow-400 fill-current" />
+        );
+      } else if (i === fullStars && halfStar) {
+        stars.push(
+          <Star
+            key={i}
+            size={14}
+            className="text-yellow-400 fill-current opacity-50"
+          />
+        );
+      } else {
+        stars.push(<Star key={i} size={14} className="text-gray-300" />);
+      }
     }
-
-    if (halfStar) {
-      stars.push(<Star key="half" className="text-yellow-400 opacity-50" />);
-    }
-
-    for (let i = 0; i < emptyStars; i++) {
-      stars.push(<Star key={`empty-${i}`} className="text-gray-300" />);
-    }
-
     return stars;
   };
 
   return (
     <motion.div
       initial={{ opacity: 0, y: 20 }}
-      animate={{ opacity: 1, y: 0 }}
-      whileHover={{ scale: 1.03 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      whileHover={{ scale: 1.02 }}
       transition={{ duration: 0.3 }}
-      className="border border-gray-200 dark:border-gray-700 rounded-xl overflow-hidden shadow-md dark:shadow-lg hover:shadow-xl transition-shadow duration-300 flex flex-col bg-white dark:bg-gray-800"
+      className="border border-gray-200 dark:border-gray-700 rounded-xl overflow-hidden shadow-sm hover:shadow-lg transition-all duration-300 flex flex-col bg-white dark:bg-gray-800 h-full"
     >
-      {/* Image */}
-      <div className="overflow-hidden">
+      {/* Image: Mobile-e height komiye h-32 ba h-40 kora hoyeche */}
+      <div className="relative overflow-hidden aspect-video sm:aspect-square lg:aspect-video">
         <img
           src={service.image || "/default-image.png"}
           alt={service.serviceName}
-          className="w-full h-56 md:h-64 object-cover transform hover:scale-105 transition-transform duration-300"
+          className="w-full h-32 sm:h-48 md:h-56 lg:h-64 object-cover transform hover:scale-105 transition-transform duration-500"
         />
       </div>
 
       {/* Content */}
-      <div className="p-5 flex flex-col flex-1">
-        {/* Title */}
-        <h2 className="text-2xl font-semibold mb-2 text-gray-900 dark:text-gray-100">
-          {service.serviceName}
-        </h2>
+      <div className="p-3 sm:p-5 flex flex-col flex-1 justify-between">
+        <div>
+          {/* Title: line-clamp use kora hoyeche jate 1 line er beshi na jay */}
+          <h2 className="text-sm sm:text-lg lg:text-xl font-bold mb-1 sm:mb-2 text-gray-900 dark:text-gray-100 line-clamp-1">
+            {service.serviceName}
+          </h2>
 
-        {/* Category with animated icon */}
-        <motion.p
-          className="text-gray-600 dark:text-gray-300 mb-2 flex items-center gap-2"
-          whileHover={{ x: 3 }}
-          transition={{ duration: 0.2 }}
-        >
-          <Tag size={18} className="text-primary" />
-          {service.category}
-        </motion.p>
+          {/* Category */}
+          <p className="text-[10px] sm:text-sm text-gray-500 dark:text-gray-400 mb-1 sm:mb-2 flex items-center gap-1">
+            <Tag size={12} className="text-primary" />
+            <span className="truncate">{service.category}</span>
+          </p>
 
-        {/* Rating */}
-        <div className="flex items-center gap-1 mb-3">
-          {renderStars(service.rating)}
-          <span className="text-gray-600 dark:text-gray-300 text-sm ml-2">
-            {service.rating?.toFixed(1) || "0.0"}
-          </span>
+          {/* Rating */}
+          <div className="flex items-center gap-1 mb-2 sm:mb-3">
+            <div className="flex">{renderStars(service.rating)}</div>
+            <span className="text-gray-500 text-[10px] sm:text-xs font-medium ml-1">
+              ({service.rating?.toFixed(1) || "0.0"})
+            </span>
+          </div>
         </div>
 
-        {/* Price */}
-        <p className="font-bold text-gray-800 dark:text-gray-200 mb-4">
-          {service.cost} BDT / {service.unit}
-        </p>
+        <div>
+          {/* Price */}
+          <p className="text-xs sm:text-base font-black text-primary mb-3">
+            {service.cost}{" "}
+            <span className="text-[10px] sm:text-xs font-normal text-gray-500">
+              BDT/{service.unit}
+            </span>
+          </p>
 
-        {/* Button with animated right arrow */}
-        <Link
-          to={`/servicesDetails/${service._id}`}
-          className="text-center bg-primary text-white px-5 py-2 rounded-lg font-medium transition-all flex items-center justify-center gap-2 hover:bg-blue-600"
-        >
-          View Details
-          <motion.span whileHover={{ x: 5 }} transition={{ duration: 0.2 }}>
-            <ArrowRight size={20} />
-          </motion.span>
-        </Link>
+          {/* Button: Mobile-e text choto kora hoyeche */}
+          <Link
+            to={`/servicesDetails/${service._id}`}
+            className="w-full bg-primary/10 hover:bg-primary text-primary hover:text-white py-1.5 sm:py-2.5 rounded-lg text-[10px] sm:text-sm font-bold transition-colors duration-300 flex items-center justify-center gap-1 sm:gap-2 group"
+          >
+            Details
+            <ArrowRight
+              size={14}
+              className="group-hover:translate-x-1 transition-transform"
+            />
+          </Link>
+        </div>
       </div>
     </motion.div>
   );

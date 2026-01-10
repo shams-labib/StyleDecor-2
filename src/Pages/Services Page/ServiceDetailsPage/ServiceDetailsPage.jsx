@@ -6,6 +6,7 @@ import {
   Mail,
   ShoppingBasket,
   CircleDollarSign,
+  ArrowLeft,
 } from "lucide-react";
 import { motion } from "framer-motion";
 import { useQuery } from "@tanstack/react-query";
@@ -67,12 +68,12 @@ const ServiceDetailsPage = () => {
           icon: "success",
           title: "Booking Confirmed!",
           text: `Your booking for ${service.serviceName} is confirmed.`,
+          confirmButtonColor: "var(--p)",
         });
+        setOpenModal(false);
+        reset();
       }
     });
-
-    setOpenModal(false);
-    reset();
   };
 
   const handleBook = () => {
@@ -85,46 +86,58 @@ const ServiceDetailsPage = () => {
   };
 
   return (
-    <div className="container mx-auto p-6 min-h-screen flex flex-col justify-center items-center">
+    <div className="container mx-auto p-6 min-h-screen flex flex-col justify-center items-center bg-gray-50 dark:bg-gray-950">
       <motion.div
-        initial={{ opacity: 0, y: 60 }}
+        initial={{ opacity: 0, y: 40 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.6 }}
-        className="card lg:card-side bg-white dark:bg-gray-900 shadow-2xl p-6 rounded-2xl border border-gray-100 dark:border-gray-700 backdrop-blur"
+        className="card lg:card-side bg-white dark:bg-gray-900 shadow-2xl p-6 rounded-3xl border border-gray-100 dark:border-gray-800 max-w-5xl w-full"
       >
         {/* Image */}
         <div className="w-full lg:w-1/2">
           <motion.img
-            initial={{ scale: 0.9 }}
+            initial={{ scale: 0.95 }}
             animate={{ scale: 1 }}
-            transition={{ duration: 0.6 }}
             src={service?.image}
             alt={service?.serviceName}
-            className="rounded-xl w-full object-cover h-80 lg:h-full shadow-lg"
+            className="rounded-2xl w-full object-cover h-80 lg:h-[450px] shadow-lg"
           />
         </div>
 
         {/* Content */}
-        <div className="card-body space-y-3">
-          <h2 className="card-title text-3xl font-bold tracking-wide">
+        <div className="card-body space-y-4 lg:w-1/2">
+          <button
+            onClick={() => navigate(-1)}
+            className="flex items-center gap-2 text-gray-400 hover:text-primary transition-colors text-sm font-bold"
+          >
+            <ArrowLeft size={16} /> Back
+          </button>
+
+          <h2 className="card-title text-4xl font-black text-gray-800 dark:text-white">
             {service?.serviceName}
           </h2>
-          <p className="text-gray-700 dark:text-gray-300 leading-relaxed">
+          <p className="text-gray-600 dark:text-gray-400 leading-relaxed text-lg">
             {service?.description}
           </p>
-          <div className="mt-4 space-y-1">
-            <p className="font-semibold">
+
+          <div className="mt-4 p-5 bg-primary/5 rounded-2xl border border-primary/10">
+            <p className="font-bold text-gray-500 text-sm uppercase tracking-widest">
               Category:{" "}
               <span className="text-primary">{service?.category}</span>
             </p>
-            <p className="font-semibold text-xl text-green-600">
-              Price: {service?.cost} BDT / {service?.unit}
+            <p className="font-black text-3xl text-primary mt-2">
+              ৳ {service?.cost}{" "}
+              <span className="text-sm font-medium text-gray-400">
+                / {service?.unit}
+              </span>
             </p>
           </div>
+
           <div className="card-actions mt-6">
             <motion.button
               whileHover={{ scale: 1.05 }}
-              className="btn btn-primary px-6 shadow-lg"
+              whileTap={{ scale: 0.95 }}
+              className="btn bg-primary hover:bg-primary/90 border-none text-white px-10 h-14 rounded-xl text-lg font-bold shadow-xl shadow-primary/20"
               onClick={handleBook}
             >
               Book Now
@@ -133,20 +146,17 @@ const ServiceDetailsPage = () => {
         </div>
       </motion.div>
 
+      {/* --- MODAL (Original Style Restored) --- */}
       {openModal && (
-        <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          className="modal modal-open"
-        >
+        <div className="modal modal-open backdrop-blur-sm bg-black/40">
           <motion.div
             initial={{ scale: 0.7, opacity: 0 }}
             animate={{ scale: 1, opacity: 1 }}
             transition={{ type: "spring", stiffness: 200 }}
-            className="modal-box dark:bg-gray-800 rounded-xl shadow-xl"
+            className="modal-box dark:bg-gray-800 rounded-3xl p-8 max-w-md border border-gray-100 dark:border-gray-700 shadow-2xl"
           >
-            <h3 className="font-bold text-2xl mb-4 text-center">
-              Book This Service
+            <h3 className="font-black text-3xl mb-6 text-center text-gray-800 dark:text-white">
+              Book Service
             </h3>
 
             <form
@@ -171,21 +181,27 @@ const ServiceDetailsPage = () => {
                 },
                 {
                   label: "Cost",
-                  value: service?.cost,
+                  value: `${service?.cost} BDT`,
                   icon: <CircleDollarSign size={18} />,
                 },
               ].map((field, i) => (
                 <div key={i} className="form-control group">
-                  <label className="label font-semibold">{field.label}</label>
-                  <div className="input input-bordered flex items-center gap-2 group-hover:shadow-md transition-all duration-200">
-                    <motion.div whileHover="hover" variants={iconAnim}>
+                  <label className="label py-1 text-xs font-bold text-gray-400 uppercase ml-1">
+                    {field.label}
+                  </label>
+                  <div className="input input-bordered border-gray-200 dark:border-gray-700 flex items-center gap-3 h-12 rounded-xl bg-gray-50/50 dark:bg-gray-900/50">
+                    <motion.div
+                      whileHover="hover"
+                      variants={iconAnim}
+                      className="text-primary"
+                    >
                       {field.icon}
                     </motion.div>
                     <input
                       type="text"
                       value={field.value}
                       disabled
-                      className="w-full bg-transparent outline-none"
+                      className="w-full bg-transparent outline-none text-sm font-semibold text-gray-500"
                     />
                   </div>
                 </div>
@@ -193,65 +209,78 @@ const ServiceDetailsPage = () => {
 
               {/* Booking Date */}
               <div className="form-control group">
-                <label className="label font-semibold">Booking Date</label>
-                <div className="input input-bordered flex items-center gap-2 group-hover:shadow-md">
-                  <motion.div variants={iconAnim} whileHover="hover">
+                <label className="label py-1 text-xs font-bold text-gray-400 uppercase ml-1">
+                  Booking Date
+                </label>
+                <div className="input input-bordered border-gray-200 dark:border-gray-700 flex items-center gap-3 h-12 rounded-xl focus-within:border-primary transition-all">
+                  <motion.div
+                    variants={iconAnim}
+                    whileHover="hover"
+                    className="text-primary"
+                  >
                     <Calendar size={18} />
                   </motion.div>
                   <input
                     type="date"
                     {...register("date", { required: true })}
-                    className="w-full bg-transparent outline-none"
+                    className="w-full bg-transparent outline-none text-sm font-semibold dark:text-white"
                   />
                 </div>
                 {errors.date && (
-                  <span className="text-red-500 text-sm">
-                    Booking date is required
+                  <span className="text-red-500 text-[10px] mt-1 ml-2 font-bold uppercase tracking-tighter">
+                    Date is required
                   </span>
                 )}
               </div>
 
               {/* Location */}
               <div className="form-control group">
-                <label className="label font-semibold">Location</label>
-                <div className="input input-bordered flex items-center gap-2 group-hover:shadow-md">
-                  <motion.div variants={iconAnim} whileHover="hover">
+                <label className="label py-1 text-xs font-bold text-gray-400 uppercase ml-1">
+                  Location
+                </label>
+                <div className="input input-bordered border-gray-200 dark:border-gray-700 flex items-center gap-3 h-12 rounded-xl focus-within:border-primary transition-all">
+                  <motion.div
+                    variants={iconAnim}
+                    whileHover="hover"
+                    className="text-primary"
+                  >
                     <MapPin size={18} />
                   </motion.div>
                   <input
                     type="text"
                     placeholder="Event location"
                     {...register("location", { required: true })}
-                    className="w-full bg-transparent outline-none"
+                    className="w-full bg-transparent outline-none text-sm font-semibold dark:text-white"
                   />
                 </div>
                 {errors.location && (
-                  <span className="text-red-500 text-sm">
+                  <span className="text-red-500 text-[10px] mt-1 ml-2 font-bold uppercase tracking-tighter">
                     Location is required
                   </span>
                 )}
               </div>
 
-              <motion.button
-                whileHover={{ scale: 1.03 }}
-                className="btn btn-primary w-full shadow-lg"
-                type="submit"
-              >
-                Confirm Booking
-              </motion.button>
-            </form>
+              <div className="pt-4 flex flex-col gap-3">
+                <motion.button
+                  whileHover={{ scale: 1.02 }}
+                  whileTap={{ scale: 0.98 }}
+                  className="btn bg-primary hover:bg-primary/90 border-none text-white w-full h-12 rounded-xl font-bold shadow-lg shadow-primary/20"
+                  type="submit"
+                >
+                  Confirm Booking
+                </motion.button>
 
-            <div className="modal-action">
-              <motion.button
-                whileHover={{ scale: 1.05 }}
-                onClick={() => setOpenModal(false)}
-                className="btn btn-outline btn-primary"
-              >
-                Close
-              </motion.button>
-            </div>
+                <button
+                  type="button"
+                  onClick={() => setOpenModal(false)}
+                  className="btn btn-ghost btn-sm text-gray-400 hover:text-red-500"
+                >
+                  Close
+                </button>
+              </div>
+            </form>
           </motion.div>
-        </motion.div>
+        </div>
       )}
     </div>
   );

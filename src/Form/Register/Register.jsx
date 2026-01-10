@@ -59,7 +59,7 @@ const Register = () => {
 
       Swal.fire({
         title: "Account Created!",
-        text: "Welcome to ZapShift",
+        text: "Welcome to StyleDecor",
         icon: "success",
         timer: 2000,
         showConfirmButton: false,
@@ -99,7 +99,7 @@ const Register = () => {
           <div className="p-8 md:p-10">
             <header className="mb-8">
               <h3 className="text-4xl font-extrabold text-gray-900 dark:text-white tracking-tight">
-                Join ZapShift
+                Join StyleDecor
               </h3>
               <p className="text-gray-500 dark:text-gray-400 mt-2 font-medium">
                 Create your account to get started.
